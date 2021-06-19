@@ -137,7 +137,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' if DEBUG else 'django.core.mail.backends.smtp.EmailBackend'
 
 
-TESTING = len(sys.argv) > 1 and sys.argv[1] != 'runserver'
+# TESTING = len(sys.argv) > 1 and sys.argv[1] != 'runserver'
 
 BASE_URL = 'http://127.0.0.1:8000' if DEBUG else 'https://minzam.herokuapp.com'
 

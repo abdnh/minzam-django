@@ -21,8 +21,8 @@ def send_task_notifications(Task):
 
 
 def run_task_notifier():
-    if settings.TESTING:
-        return
+    # if settings.TESTING:
+    #     return
 
     exit = Event()
 
@@ -34,7 +34,7 @@ def run_task_notifier():
 
     from .models import Task
 
-    def foo():
+    def notify():
         while True:
             s = exit.wait(60)
             if s:
@@ -43,5 +43,5 @@ def run_task_notifier():
             print(f"{datetime.datetime.now()}: sending task notifications", file=sys.stderr)
             send_task_notifications(Task)
 
-    threading.Thread(target=foo).start()
+    threading.Thread(target=notify).start()
 
