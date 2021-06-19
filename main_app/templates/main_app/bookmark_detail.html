@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}إشارة مرجعية: {{ bookmark.title }}{% endblock %}
+
+{% block content %}
+  <header>
+    <h1>إشارة مرجعية: {{ bookmark.title }}</h1>
+    {% load svg_icons %}
+    {% update_icon bookmark %}
+    {% delete_icon bookmark %}
+  </header>
+
+  <table>
+    <tbody>
+      <tr>
+        <th>رابط:</th>
+        <td><a href="{{ bookmark.url }}">{{ bookmark.url }}</a></td>
+      </tr>
+      <tr>
+        <th>وصف:</th>
+        <td>{{ bookmark.descr }}</td>
+      </tr>
+      <tr>
+        <th>وسوم:</th>
+        {% load tag_extras %}
+        <td>{% bookmark_tags %}</td>
+      </tr>
+      <tr>
+        <th>تاريخ الإنشاء:</th>
+        <td>{{ bookmark.created }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+{% endblock %}

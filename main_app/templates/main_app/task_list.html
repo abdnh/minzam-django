@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}قائمة المهام{% endblock %}
+
+{% block content %}
+  <h1>قائمة المهام</h1>
+  {% if user.is_authenticated %}
+  <button id="add-button"><a href="create/">أضف</a></button>
+  {% endif %}
+  {% if task_list %}
+  <table id="items-table">
+    <thead>
+      <tr>
+        <th>اسم</th>
+        <th>أولوية</th>
+        <th>تاريخ الاستحقاق</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for task in task_list %}
+      <tr>
+        <td><a href="{{ task.get_absolute_url }}">{{ task.name }}</a></td>
+        <td>{{ task.priority }}</td>
+        <td>
+          {{ task.due_date }}
+          {% if task.due_date < now %}
+          (مضى)
+          {% endif %}
+        </td>
+        <td>
+          {% load svg_icons %}
+          {% update_icon task %}
+          {% delete_icon task %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p>ليس لديك أي مهام.</p>
+  {% endif %} 
+{% endblock %}

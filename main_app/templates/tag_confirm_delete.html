@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>حذف وسم</h1>
+
+<p>هل أنت متأكد من أنك تريد حذف الوسم "{{ tag }}"؟</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="نعم">
+</form>
+
+{% endblock %}

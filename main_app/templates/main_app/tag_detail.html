@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}وسم: {{ tag.name }}{% endblock %}
+
+{% block content %}
+  <header>
+    <h1>وسم: {{ tag.name }}</h1>
+    {% load svg_icons %}
+    {% update_icon tag %}
+    {% delete_icon tag %}
+  </header>
+
+  {% if bookmarks %}
+    <h2>إشارات مرجعية</h2>
+    <ul>
+      {% for bookmark in bookmarks %}
+        <li>
+          <a href="{{ bookmark.get_absolute_url }}">{{ bookmark.title }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if tasks %}
+    <h2>مهام</h2>
+    <ul>
+      {% for task in tasks %}
+        <li>
+          <a href="{{ task.get_absolute_url }}">{{ task.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+{% endblock %}

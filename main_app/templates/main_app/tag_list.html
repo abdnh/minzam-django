@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}قائمة الوسوم{% endblock %}
+
+{% block content %}
+  <h1>قائمة الوسوم</h1>
+  {% if user.is_authenticated %}
+  <button id="add-button"><a href="create/">أضف</a></button>
+  {% endif %}
+  {% if tag_list %}
+  <ul>
+    {% for tag in tag_list %}
+      <li class="list-item">
+        <a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>
+        {% load svg_icons %}
+        {% update_icon tag %}
+        {% delete_icon tag %}
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>ليس لديك أي وسوم.</p>
+  {% endif %} 
+{% endblock %}

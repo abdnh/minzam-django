@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}قائمة الإشارات المرجعية{% endblock %}
+
+{% block content %}
+  <h1>قائمة الإشارات المرجعية</h1>
+  {% if user.is_authenticated %}
+  <button id="add-button"><a href="create/">أضف</a></button>
+  {% endif %}
+  {% if bookmark_list %}
+  <table id="items-table">
+    <thead>
+      <tr>
+        <th>عنوان</th>
+        <th>رابط</th>
+        <th>تاريخ الإنشاء</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for bookmark in bookmark_list %}
+      <tr>
+        <td><a href="{{ bookmark.get_absolute_url }}">{{ bookmark.title }}</a></td>
+        <td dir="ltr"><a href="{{ bookmark.url }}">{{ bookmark.url|truncatechars:100 }}</a></td>
+        <td>{{ bookmark.created }}</td>
+        <td>
+          {% load svg_icons %}
+          {% update_icon bookmark %}
+          {% delete_icon bookmark %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p>ليس لديك أي إشارات مرجعية.</p>
+  {% endif %} 
+{% endblock %}

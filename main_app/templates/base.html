@@ -1,0 +1,52 @@
+<!doctype html>
+<html dir="rtl" lang="ar">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+
+    <title>{% block title %}منظام{% endblock %}</title>
+  </head>
+  <body>
+    <nav id="sidebar">
+      <div id="logo"><a href="{% url 'index' %}">منظام</a></div>
+      <ul id="usernav">
+        {% if user.is_authenticated %}
+        <li><b>مستخدم: {{ user.get_username }}</b></li>
+        <li><a href="{% url 'logout'%}?next={{request.path}}">خروج</a></li>
+        {% else %}
+        <li><a href="{% url 'login'%}?next={{request.path}}">دخول</a></li>
+        <li><a href="{% url 'signup'%}?next={{request.path}}">تسجيل</a></li>
+        {% endif %}
+      </ul>
+      <ul id="navlinks">
+        <li><a href="{% url 'bookmarks' %}">إشارات مرجعية</a></li>
+        <li><a href="{% url 'tasks' %}">مهام</a></li>
+        <li><a href="{% url 'tags' %}">وسوم</a></li>
+      </ul>
+    </nav>
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+  </body>
+</html>
+
+{% block pagination %}
+  {% if is_paginated %}
+      <div class="pagination">
+          <span class="page-links">
+              {% if page_obj.has_previous %}
+                  <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">السابق</a>
+              {% endif %}
+              <span class="page-current">
+                  صفحة {{ page_obj.number }} من أصل {{ page_obj.paginator.num_pages }}.
+              </span>
+              {% if page_obj.has_next %}
+                  <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">التالي</a>
+              {% endif %}
+          </span>
+      </div>
+  {% endif %}
+{% endblock %}

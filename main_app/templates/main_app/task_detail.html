@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}مهمة: {{ task.name }}{% endblock %}
+
+{% block content %}
+  <header>
+    <h1>مهمة: {{ task.name }}</h1>
+    {% load svg_icons %}
+    {% update_icon task %}
+    {% delete_icon task %}
+  </header>
+
+  <table>
+    <tbody>
+      <tr>
+        <th>وصف:</th>
+        <td>{{ task.descr }}</td>
+      </tr>
+      <tr>
+        <th>وسوم:</th>
+        {% load tag_extras %}
+        <td>{% task_tags %}</td>
+      </tr>
+      <tr>
+        <th>أولوية:</th>
+        {% load tag_extras %}
+        <td>{{ task.priority }}</td>
+      </tr>
+      <tr>
+        <th>تاريخ الإنشاء:</th>
+        <td>{{ task.created }}</td>
+      </tr>
+      <tr>
+        <th>تاريخ الاستحقاق:</th>
+        <td>
+          {{ task.due_date }}
+          {% if task.due_date < now %}
+          (مضى)
+          {% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+{% endblock %}
