@@ -30,9 +30,9 @@ class TaskForm(forms.Form):
 
     name = forms.CharField(label='اسم')
     descr = forms.CharField(widget=forms.Textarea, label='وصف', required=False)
-    priority = forms.IntegerField(label='أولوية', min_value=0)
+    priority = forms.IntegerField(label='أولوية', min_value=1, help_text='مدى أهمية المهمة لك - المهام ذات القيم الأصغر تعد أهم')
     tags = forms.ModelMultipleChoiceField(queryset=Tag.objects, label='وسوم', required=False)
-    due_date = forms.DateTimeField(widget=DateTimeWidget, label='تاريخ الاستحقاق', validators=[ensure_future_date])
+    due_date = forms.DateTimeField(widget=DateTimeWidget, label='تاريخ الاستحقاق', validators=[ensure_future_date], help_text='التاريخ الذي تريد تنفيذ المهمة فيه لكي نرسل لك رسالة تنبيهية في هذا الوقت<br>(يجب أن تدخل التاريخ يدويًا بصيغة مثل <em dir="ltr">2021-06-19T14:45</em> إذا كان متصفحك لا يدعم واجهة إدخال تاريخ تفاعلية)')
 
     def __init__(self, user=None, *args, **kwargs):
         super().__init__(*args, **kwargs)

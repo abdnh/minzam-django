@@ -4,8 +4,9 @@
 
 {% block content %}
   <h1>قائمة الإشارات المرجعية</h1>
+  <p>الإشارات المرجعية هي روابط إنترنت تخزنها للرجوع إليها لاحقًا (أو تكدسها إلى أبد الآبدين) مثل الموجودة في متصفحات الإنترنت.</p>
   {% if user.is_authenticated %}
-  <button id="add-button"><a href="create/">أضف</a></button>
+    <button id="add-button"><a href="create/">أضف</a></button>
   {% endif %}
   {% if bookmark_list %}
   <table id="items-table">

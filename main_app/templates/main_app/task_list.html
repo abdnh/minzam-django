@@ -4,8 +4,9 @@
 
 {% block content %}
   <h1>قائمة المهام</h1>
+  <p>المهام هي أعمال تريد إنجازها في وقت محدد. يرسل لك الموقع تنبيهات على بريدك الإلكتروني عند مجيء موعد كل مهمة مسجلة.</p>
   {% if user.is_authenticated %}
-  <button id="add-button"><a href="create/">أضف</a></button>
+    <button id="add-button"><a href="create/">أضف</a></button>
   {% endif %}
   {% if task_list %}
   <table id="items-table">
