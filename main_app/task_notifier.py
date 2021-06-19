@@ -1,10 +1,35 @@
-import sys, datetime, threading, signal
+import sys, datetime, threading, signal, json
 from threading import Event
 
 from django.utils import timezone
 from django.conf import settings
 from django.core.mail import send_mail
 from django.template import loader
+
+import requests
+
+def send_email_via_trustifi(subject, html_body, recipient):
+    url = settings.TRUSTIFI_URL +'/api/i/v1/email'
+
+    payload = {
+        "recipients": [
+            {
+                "email": recipient
+            }
+        ],
+        "title": subject,
+        "html": html_body,
+    }
+
+    headers = {
+    'x-trustifi-key': settings.TRUSTIFI_KEY,
+    'x-trustifi-secret': settings.TRUSTIFI_SECRET,
+    'Content-Type': 'application/json'
+    }
+
+    response = requests.request('POST', url, headers = headers, data = json.dumps(payload))
+    print(response.json())
+
 
 def send_task_notifications(Task):
     domain = settings.BASE_URL
@@ -15,7 +40,13 @@ def send_task_notifications(Task):
         context = {'task_name': task.name, 'task_url': url}
         text_body = loader.render_to_string('task_notification_body.txt', context)
         html_body = loader.render_to_string('task_notification_body.html', context)
-        send_mail(subject, text_body, None, [task.user.email], fail_silently=False, html_message=html_body)
+        recipient = task.user.email
+        print(f'- sending email to "{task.user.email}" about task "{task.name}"')
+        if settings.USE_TRUSTIFI:
+            send_email_via_trustifi(subject, html_body, recipient)
+        else:
+            send_mail(subject, text_body, None, [recipient], fail_silently=False, html_message=html_body)
+
         task.notified = True
         task.save()
 
