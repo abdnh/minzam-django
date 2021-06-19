@@ -1,5 +1,4 @@
-import sys, datetime, threading, signal, json
-from threading import Event
+import sys, datetime, threading, json
 
 from django.utils import timezone
 from django.conf import settings
@@ -52,18 +51,9 @@ def send_task_notifications(Task):
 
 
 def run_task_notifier():
-    if settings.TESTING:
-        return
-
-    exit = Event()
-
-    def quit(s, f):
-        exit.set()
-        sys.exit()
-
-    signal.signal(signal.SIGINT, quit)
-
     from .models import Task
+
+    exit = threading.Event()
 
     def notify():
         while True:

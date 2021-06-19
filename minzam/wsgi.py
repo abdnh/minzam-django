@@ -11,6 +11,10 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
+from main_app.task_notifier import run_task_notifier
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'minzam.settings')
 
 application = get_wsgi_application()
+
+run_task_notifier()
