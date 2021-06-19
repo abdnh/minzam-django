@@ -136,7 +136,7 @@ EMAIL_HOST_PASSWORD = os.getenv('DJANGO_EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' if DEBUG else 'django.core.mail.backends.smtp.EmailBackend'
 
-USE_TRUSTIFI = False if os.getenv('USE_TRUSTIFI', 'false').lower() == 'false' and DEBUG else True
+USE_TRUSTIFI = False if os.getenv('USE_TRUSTIFI', 'false').lower() == 'false' or DEBUG else True
 TRUSTIFI_KEY = os.getenv('TRUSTIFI_KEY')
 TRUSTIFI_SECRET = os.getenv('TRUSTIFI_SECRET')
 TRUSTIFI_URL = os.getenv('TRUSTIFI_URL')
