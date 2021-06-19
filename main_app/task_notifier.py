@@ -52,8 +52,8 @@ def send_task_notifications(Task):
 
 
 def run_task_notifier():
-    # if settings.TESTING:
-    #     return
+    if settings.TESTING:
+        return
 
     exit = Event()
 

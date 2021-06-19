@@ -6,6 +6,9 @@ class MainAppConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'main_app'
     verbose_name = 'منظام'
+    ran = False
 
     def ready(self):
-        run_task_notifier()
+        if not self.ran:
+            run_task_notifier()
+            ran = True

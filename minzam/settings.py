@@ -141,7 +141,8 @@ TRUSTIFI_KEY = os.getenv('TRUSTIFI_KEY')
 TRUSTIFI_SECRET = os.getenv('TRUSTIFI_SECRET')
 TRUSTIFI_URL = os.getenv('TRUSTIFI_URL')
 
-# TESTING = len(sys.argv) > 1 and sys.argv[1] != 'runserver'
+TESTING = len(sys.argv) > 1 and sys.argv[1] != 'runserver' and sys.argv[0] != 'gunicorn'
+print(f"sys.argv = {sys.argv}")
 
 BASE_URL = 'http://127.0.0.1:8000' if DEBUG else 'https://minzam.herokuapp.com'
 
