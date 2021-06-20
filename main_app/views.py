@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+from django.core.exceptions import ValidationError
 
 from .models import Bookmark, Task, Tag
 from .forms import BookmarkForm, TaskForm, TagForm, UserRegistrationForm
@@ -167,8 +168,13 @@ def create_task(request):
                                               due_date=timezone.make_aware(datetime.combine(form.cleaned_data['due_date'], form.cleaned_data['due_time'])),
                                               user=request.user)
             task.tags.set(form.cleaned_data['tags'])
-            task.save()
-            return HttpResponseRedirect(reverse('task-detail', kwargs={'pk': task.id}))
+            try:
+                task.full_clean()
+            except ValidationError as ex:
+                form.add_error(None, ex.error_dict)
+            else:
+                task.save()
+                return HttpResponseRedirect(reverse('task-detail', kwargs={'pk': task.id}))
 
     else:
         form = TaskForm(user=request.user)
@@ -202,8 +208,13 @@ def update_task(request, task_id):
             task.notifed = new_due_date <= task.due_date
             task.due_date = new_due_date
             task.tags.set(form.cleaned_data['tags'])
-            task.save()
-            return HttpResponseRedirect(reverse('task-detail', kwargs={'pk': task.id}))
+            try:
+                task.full_clean()
+            except ValidationError as ex:
+                form.add_error(None, ex.error_dict)
+            else:
+                task.save()
+                return HttpResponseRedirect(reverse('task-detail', kwargs={'pk': task.id}))
     else:
         naive_date = timezone.make_naive(task.due_date)
         data = TaskData({

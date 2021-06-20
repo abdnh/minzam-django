@@ -381,7 +381,8 @@ class TaskOpsTest(TestCase):
             'name': 'task name',
             'descr': 'task description',
             'priority': 1,
-            'due_date': timezone.now() + datetime.timedelta(days=1),
+            'due_date': (timezone.now() + datetime.timedelta(days=1)).date(),
+            'due_time': datetime.time(hour=2, minute=0),
             'tags': [],
         }
         post_response = self.client.post('/task/create/', data)
@@ -397,7 +398,8 @@ class TaskOpsTest(TestCase):
             'name': 'foo',
             'descr': 'foo descr',
             'priority': 2,
-            'due_date': timezone.now() + datetime.timedelta(days=1),
+            'due_date': (timezone.now() + datetime.timedelta(days=1)).date(),
+            'due_time': datetime.time(hour=2, minute=0),
             'tags': [],
         }
         post_response = self.client.post('/task/1/update/', data)

@@ -1,4 +1,3 @@
-from datetime import datetime
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UsernameField
 from django.core.exceptions import ValidationError
@@ -33,13 +32,6 @@ def validate_due_date(value):
             params={'value': value},
         )
 
-def validate_due_time(value):
-    if value < datetime.now().time():
-        raise ValidationError(
-            '%(value)s هو وقت مضى وانتهى',
-            params={'value': value},
-        )
-
 
 class TaskForm(forms.Form):
 
@@ -48,7 +40,7 @@ class TaskForm(forms.Form):
     priority = forms.IntegerField(label='أولوية', min_value=1, help_text='مدى أهمية المهمة لك - المهام ذات القيم الأصغر تعد أهم')
     tags = forms.ModelMultipleChoiceField(queryset=Tag.objects, label='وسوم', required=False)
     due_date = forms.DateField(widget=DateWidget, label='تاريخ الاستحقاق', validators=[validate_due_date])
-    due_time = forms.TimeField(widget=TimeWidget, label='ساعة الاستحقاق', validators=[validate_due_time])
+    due_time = forms.TimeField(widget=TimeWidget, label='ساعة الاستحقاق')
 
     def __init__(self, user=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
