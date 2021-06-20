@@ -1,7 +1,10 @@
+from datetime import datetime
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UsernameField
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 
-from .models import Tag, User, ensure_future_date
+from .models import Tag, User
 
 class BookmarkForm(forms.Form):
 
@@ -15,15 +18,27 @@ class BookmarkForm(forms.Form):
         if user:
             self.fields['tags'].queryset = Tag.objects.filter(user=user)
 
-class DateTimeWidget(forms.DateInput):
-    input_type = 'datetime-local'
 
-    def __init__(self, format=None):
-        attrs = {
-            # for browsers that do not support datetime-local
-            'pattern': '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}'
-        }
-        super().__init__(attrs, format)
+class DateWidget(forms.DateInput):
+    input_type = 'date'
+
+class TimeWidget(forms.TimeInput):
+    input_type = 'time'
+
+
+def validate_due_date(value):
+    if value < timezone.now().date():
+        raise ValidationError(
+            '%(value)s هو تاريخ مضى وانتهى',
+            params={'value': value},
+        )
+
+def validate_due_time(value):
+    if value < datetime.now().time():
+        raise ValidationError(
+            '%(value)s هو وقت مضى وانتهى',
+            params={'value': value},
+        )
 
 
 class TaskForm(forms.Form):
@@ -32,7 +47,8 @@ class TaskForm(forms.Form):
     descr = forms.CharField(widget=forms.Textarea, label='وصف', required=False)
     priority = forms.IntegerField(label='أولوية', min_value=1, help_text='مدى أهمية المهمة لك - المهام ذات القيم الأصغر تعد أهم')
     tags = forms.ModelMultipleChoiceField(queryset=Tag.objects, label='وسوم', required=False)
-    due_date = forms.DateTimeField(widget=DateTimeWidget, label='تاريخ الاستحقاق', validators=[ensure_future_date], help_text='التاريخ الذي تريد تنفيذ المهمة فيه لكي نرسل لك رسالة تنبيهية في هذا الوقت<br>(يجب أن تدخل التاريخ يدويًا بصيغة مثل <em dir="ltr">2021-06-19T14:45</em> إذا كان متصفحك لا يدعم واجهة إدخال تاريخ تفاعلية)')
+    due_date = forms.DateField(widget=DateWidget, label='تاريخ الاستحقاق', validators=[validate_due_date])
+    due_time = forms.TimeField(widget=TimeWidget, label='ساعة الاستحقاق', validators=[validate_due_time])
 
     def __init__(self, user=None, *args, **kwargs):
         super().__init__(*args, **kwargs)

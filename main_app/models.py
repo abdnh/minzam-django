@@ -42,7 +42,7 @@ class Bookmark(models.Model):
 
 
 def ensure_future_date(value):
-    if value <= timezone.now():
+    if value < timezone.now():
         raise ValidationError(
             '%(value)s هو تاريخ مضى وانتهى',
             params={'value': value},

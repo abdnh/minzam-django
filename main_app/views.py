@@ -1,13 +1,15 @@
+from datetime import datetime
 from django.http.response import HttpResponseRedirect
 from django.utils import timezone
-from .forms import BookmarkForm, TaskForm, TagForm, UserRegistrationForm
 from django.shortcuts import render, get_object_or_404
-from .models import Bookmark, Task, Tag
 from django.views import generic
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+
+from .models import Bookmark, Task, Tag
+from .forms import BookmarkForm, TaskForm, TagForm, UserRegistrationForm
 
 
 def index(request):
@@ -162,7 +164,7 @@ def create_task(request):
             task = Task.objects.create(name=form.cleaned_data['name'],
                                               descr=form.cleaned_data['descr'],
                                               priority=form.cleaned_data['priority'],
-                                              due_date=form.cleaned_data['due_date'],
+                                              due_date=timezone.make_aware(datetime.combine(form.cleaned_data['due_date'], form.cleaned_data['due_time'])),
                                               user=request.user)
             task.tags.set(form.cleaned_data['tags'])
             task.save()
@@ -195,16 +197,21 @@ def update_task(request, task_id):
             task.name = form.cleaned_data['name']
             task.descr = form.cleaned_data['descr']
             task.priority = form.cleaned_data['priority']
-            task.due_date = form.cleaned_data['due_date']
+            new_due_date = timezone.make_aware(datetime.combine(form.cleaned_data['due_date'], form.cleaned_data['due_time']))
+            # FIXME: resending emails for the same tasks doesn't seem to work sometimes even though notified is updated - race condition?
+            task.notifed = new_due_date <= task.due_date
+            task.due_date = new_due_date
             task.tags.set(form.cleaned_data['tags'])
             task.save()
             return HttpResponseRedirect(reverse('task-detail', kwargs={'pk': task.id}))
     else:
+        naive_date = timezone.make_naive(task.due_date)
         data = TaskData({
             'name': task.name,
             'descr': task.descr,
             'priority': task.priority,
-            'due_date': task.due_date,
+            'due_date': naive_date.date(),
+            'due_time': naive_date.time(),
         })
         data.task = task
         form = TaskForm(user=request.user, data=data)
