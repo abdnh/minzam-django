@@ -110,3 +110,12 @@ header {
 header > a {
     margin-right: 10px;
 }
+
+.pagination {
+    margin-top: 15px;
+}
+
+.page-current {
+    margin-right: 5px;
+    margin-left: 5px;
+}
