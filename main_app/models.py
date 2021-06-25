@@ -18,8 +18,7 @@ class Tag(models.Model):
         return reverse('tag-detail', args=[str(self.id)])
 
     def __str__(self):
-        return f"{self.name}"
-
+        return self.name
 
 
 class Bookmark(models.Model):
@@ -38,7 +37,7 @@ class Bookmark(models.Model):
         return reverse('bookmark-detail', args=[str(self.id)])
 
     def __str__(self):
-        return f"{self.title}"
+        return self.title
 
 
 def ensure_future_date(value):
@@ -67,5 +66,5 @@ class Task(models.Model):
         return reverse('task-detail', args=[str(self.id)])
 
     def __str__(self):
-        return f"{self.name}"
+        return self.name
 
