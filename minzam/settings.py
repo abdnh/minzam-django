@@ -138,7 +138,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' if DEBUG else '
 USE_TRUSTIFI = False if os.getenv('USE_TRUSTIFI', 'false').lower() == 'false' or DEBUG else True
 TRUSTIFI_KEY = os.getenv('TRUSTIFI_KEY')
 TRUSTIFI_SECRET = os.getenv('TRUSTIFI_SECRET')
-TRUSTIFI_URL = os.getenv('TRUSTIFI_URL')
 
 BASE_URL = 'http://127.0.0.1:8000' if DEBUG else 'https://minzam.herokuapp.com'
 

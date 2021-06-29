@@ -8,7 +8,6 @@ from django.template import loader
 import requests
 
 def send_email_via_trustifi(subject, html_body, recipient):
-    url = settings.TRUSTIFI_URL +'/api/i/v1/email'
 
     payload = {
         "recipients": [
@@ -26,7 +25,7 @@ def send_email_via_trustifi(subject, html_body, recipient):
     'Content-Type': 'application/json'
     }
 
-    response = requests.request('POST', url, headers = headers, data = json.dumps(payload))
+    response = requests.request('POST', 'https://be.trustifi.com/api/i/v1/email', headers = headers, data = json.dumps(payload))
     print(response.json())
 
 
